@@ -53,7 +53,7 @@ async function main() {
 
   client.onmessage = function(e) {
     if (typeof e.data === 'string') {
-      term.write(e.data + '\n')
+      term.write(e.data)
     }
   }
 }

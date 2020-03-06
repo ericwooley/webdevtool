@@ -4,6 +4,10 @@
   "description": "IDE for your terminal",
   "main": "build/index.js",
   "license": "MIT",
+  "scripts": {
+    "dev:server": "yarn ts-node-dev --respawn --transpileOnly --watch server/ server/server.ts",
+    "dev:client": "yarn parcel client"
+  },
   "devDependencies": {
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.3",
