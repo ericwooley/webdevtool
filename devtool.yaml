@@ -1,0 +1,13 @@
+name: pulse360
+brandColor: blue
+logo: ./logo.png
+terminals:
+  - name: start server
+    command: bin/rails s
+  - name: start webpack
+    command: ping www.google.com
+shortcuts:
+  - url: http://localhost:9000
+    name: webpack frontend
+  - url: http://localhost:3000
+    name: rails front end
