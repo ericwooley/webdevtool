@@ -20,10 +20,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import { SecondaryListItems, MainListItems } from './listItems'
-import Deposits from './deposits'
+
 import Orders from './orders'
-import { IShortcut, ITerminal } from '../interfaces'
+import { IShortcut, ITerminal } from '../../interfaces'
 import Terminal from './terminal'
+import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp'
+import AdjustSharpIcon from '@material-ui/icons/AdjustSharp'
 
 function Footer() {
   return (
@@ -118,6 +120,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Dashboard: React.FunctionComponent<{
+  connected: boolean
   shortcuts: IShortcut[]
   terminals: ITerminal[]
 }> = props => {
@@ -161,9 +164,14 @@ const Dashboard: React.FunctionComponent<{
             Dashboard
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+            {props.connected ? (
+              <AdjustSharpIcon color="secondary" titleAccess="connected" />
+            ) : (
+              <RadioButtonUncheckedSharpIcon
+                color="error"
+                titleAccess="disconnected"
+              />
+            )}
           </IconButton>
         </Toolbar>
       </AppBar>

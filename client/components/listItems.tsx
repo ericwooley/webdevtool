@@ -4,7 +4,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ComputerIcon from '@material-ui/icons/Computer'
 import BookmarksIcon from '@material-ui/icons/Bookmarks'
-import { IShortcut, ITerminal } from '../interfaces'
+import { IShortcut, ITerminal } from '../../interfaces'
 import styled from 'styled-components'
 const Initials = styled.span`
   display: inline-block;

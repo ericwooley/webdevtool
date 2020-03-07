@@ -1,45 +1,42 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Spinner } from './components/spinner'
-
-import { server } from './settings'
+import { settings, server } from './settings'
 import Dashboard from './components/dashboard'
-import { IShortcut, ITerminal } from './interfaces'
-
+import { IConfig } from '../interfaces'
+import Socket from './socket'
+export const socket = new Socket({})
 class AppBody extends Component<
   {},
   {
-    loaded: boolean
-    terminals: ITerminal[]
-    shortcuts: IShortcut[]
+    config?: IConfig
   }
 > {
+  constructor(props: any, context: any) {
+    super(props, context)
+    this.state = {}
+  }
   async componentDidMount() {
-    if (!this.state.loaded) {
-      await this.loadSettings()
-      this.setState(s => ({ ...s, loaded: true }))
-    }
+    await this.loadSettings()
   }
   loadSettings = async () => {
-    const { data } = await server.get('/config/')
+    const { data }: { data: IConfig } = await server.get('/config')
     this.setState(s => ({
-      ...s,
-      shortcuts: data.shortcuts,
-      terminals: data.terminals
+      loaded: true,
+      config: data
     }))
-    console.log('data', data)
-  }
-  state = {
-    loaded: false,
-    terminals: [],
-    shortcuts: []
+    socket.setHost(settings.devToolHost)
+    socket.setPort(`${data.wsPort}`)
+    await socket.connect()
+    this.forceUpdate()
   }
   render() {
-    if (!this.state.loaded) return <Spinner />
+    if (!this.state.config) return <Spinner />
     return (
       <Dashboard
-        shortcuts={this.state.shortcuts}
-        terminals={this.state.terminals}
+        connected={socket.isConnected()}
+        shortcuts={this.state.config.shortcuts}
+        terminals={this.state.config.terminals}
       ></Dashboard>
     )
   }

@@ -1,11 +1,19 @@
-import express, { Request } from 'express'
+import express from 'express'
 import yargs from 'yargs'
 import { readFileSync, promises as fs } from 'fs'
 import { join } from 'path'
 import { parse } from 'yaml'
-import portastic from 'portastic'
 import cors from 'cors'
-import { runCommandOverWebsocket } from './socket'
+import { startWebsocketServer } from './socket'
+import { IConfig, IAutoId } from '../interfaces'
+import { createHash, randomBytes } from 'crypto'
+const generateAutoId = (algorithm: string) => {
+  return <T extends IAutoId>(e: T): T => {
+    const hasher = createHash(algorithm, {})
+    const id = e.id || hasher.update(e.name).digest('hex')
+    return { ...e, id }
+  }
+}
 const args = yargs
   .usage('Usage: $0 <command> [options]')
   .command('start', 'start serving a development service')
@@ -21,10 +29,8 @@ const args = yargs
   .alias('p', 'port')
   .default('p', 4306)
   .describe('p', 'Port for serving the frontend')
-  .describe('wsPortMin', 'minimum port number for websocket connections')
-  .default('wsPortMin', 4307)
-  .describe('wsPortMax', 'maximum port number for websocket connections')
-  .default('wsPortMax', 4406)
+  .describe('wsPort', 'Port for websocket connections')
+  .default('wsPort', 4307)
   .alias('d', 'dev')
   .default('d', process.env.DEV_SERVER || '')
   .describe('d', 'proxy frontend requests to process.env.DEV_SERVER')
@@ -32,9 +38,13 @@ const args = yargs
   .alias('h', 'help')
   .epilog('created by github.com/ericwooley').argv
 
-const terminals: { [key: string]: { stop: () => Promise<any> } } = {}
 try {
-  const devFile = parse(readFileSync(join(process.cwd(), args.f)).toString())
+  const devFile: IConfig = parse(
+    readFileSync(join(process.cwd(), args.f)).toString()
+  )
+  devFile.shortcuts = devFile.shortcuts.map(generateAutoId('sha256'))
+  devFile.terminals = devFile.terminals.map(generateAutoId('sha256'))
+  devFile.wsPort = args.wsPort || devFile.wsPort
   const app = express()
   app.use(
     '*',
@@ -44,24 +54,18 @@ try {
   )
 
   app.get('/config', async (req, res) => res.json(devFile))
-  app.get('/run-command/:idx', async (req: Request<{ idx: string }>, res) => {
-    const ports = await portastic.find({
-      min: args.wsPortMin,
-      max: args.wsPortMax
+  app.get('/generateSessionId', async (req, res) => {
+    randomBytes(48, function(err, buffer) {
+      if (err) {
+        res.json({ error: err })
+        res.statusCode = 500
+        return
+      }
+      res.json(buffer.toString('hex'))
     })
-    const terminal = devFile.terminals[req.params.idx]
-    if (!terminal) {
-      res.json({ error: 'could not find terminal: ' + req.params.idx })
-      res.statusCode = 404
-      return
-    }
-    res.json({ terminal, port: ports[0] })
-    terminals[req.params.idx] = await runCommandOverWebsocket(
-      terminal,
-      ports[0]
-    )
   })
   app.listen(args.p, () => console.log('listening on', args.p))
+  startWebsocketServer(devFile, args.wsPort)
 } catch (e) {
   console.error('Server error', e)
   process.exitCode = 1
