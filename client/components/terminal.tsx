@@ -5,14 +5,19 @@ import { Terminal as XTerminal } from 'xterm'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import { FitAddon } from 'xterm-addon-fit'
 import { settings, server } from '../settings'
-import { Paper, Typography } from '@material-ui/core'
+import { Paper, Typography, Button } from '@material-ui/core'
 import KeyboardIcon from '@material-ui/icons/Keyboard'
 
-export default class Terminal extends React.PureComponent<{
-  terminal: ITerminal
-  terminalID: number | string
-}> {
+export default class Terminal extends React.PureComponent<
+  {
+    terminal: ITerminal
+    terminalID: number | string
+  },
+  { running: boolean }
+> {
+  state = { running: false }
   connectTerminal = async () => {
+    this.setState(s => ({ ...s, running: true }))
     const { data: commandResponse } = await server.get(
       `/run-command/${this.props.terminalID}`
     )
@@ -22,11 +27,12 @@ export default class Terminal extends React.PureComponent<{
       'echo-protocol'
     )
 
-    client.onerror = function() {
+    client.onerror = () => {
       console.log('Connection Error')
+      this.setState(s => ({ ...s, running: false }))
     }
 
-    client.onopen = function() {
+    client.onopen = () => {
       console.log('WebSocket Client Connected')
     }
 
@@ -53,7 +59,15 @@ export default class Terminal extends React.PureComponent<{
     return (
       <Paper>
         <div>
-          <Typography><KeyboardIcon onClick={this.connectTerminal} /> {this.props.terminal.name}</Typography>
+          <Typography>
+            <Button
+              onClick={this.connectTerminal}
+              disabled={this.state.running}
+            >
+              <KeyboardIcon />
+            </Button>
+            {this.props.terminal.name}
+          </Typography>
         </div>
         <div ref={this.ref}></div>
       </Paper>

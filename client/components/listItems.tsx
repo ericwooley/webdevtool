@@ -10,11 +10,11 @@ const Initials = styled.span`
   display: inline-block;
   text-overflow: ellipsis;
   width: 1.5rem;
-  margin-top: 1rem;
-  margin-left: .4rem;
+  margin-top: .7rem;
+  margin-left: 0.4rem;
   font-size: 0.6rem;
   position: absolute;
-  color: white;
+  color: black;
   font-weight: bold;
 `
 const getInitials = (str: string) =>
@@ -26,14 +26,19 @@ const getInitials = (str: string) =>
 
 export const MainListItems: React.FunctionComponent<{
   terminals: ITerminal[]
-}> = () => (
+}> = props => (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <ComputerIcon fontSize="large" />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
+    {props.terminals.map(t => (
+      <ListItem button>
+        <ListItemIcon>
+          <>
+            <Initials>{getInitials(t.name)}</Initials>
+            <ComputerIcon fontSize="large" titleAccess={t.name} />
+          </>
+        </ListItemIcon>
+        <ListItemText primary={t.name} />
+      </ListItem>
+    ))}
   </div>
 )
 
@@ -46,7 +51,10 @@ export const SecondaryListItems: React.FunctionComponent<{
         <ListItemIcon>
           <>
             <Initials>{getInitials(shortcut.name)}</Initials>
-            <BookmarksIcon fontSize="large" titleAccess={shortcut.name}></BookmarksIcon>
+            <BookmarksIcon
+              fontSize="large"
+              titleAccess={shortcut.name}
+            ></BookmarksIcon>
           </>
         </ListItemIcon>
         <ListItemText primary={shortcut.name} />
