@@ -2,9 +2,9 @@ name: pulse360
 brandColor: blue
 logo: ./logo.png
 terminals:
-  - name: start server
-    command: bin/rails s
-  - name: start webpack
+  - name: start terminal
+    command: zsh
+  - name: ping google
     command: ping www.google.com
 shortcuts:
   - url: http://localhost:9000
