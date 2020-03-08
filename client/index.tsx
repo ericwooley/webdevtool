@@ -35,6 +35,7 @@ class AppBody extends Component<
     return (
       <Dashboard
         connected={socket.isConnected()}
+        sections={this.state.config.sections}
         shortcuts={this.state.config.shortcuts}
         terminals={this.state.config.terminals}
       ></Dashboard>

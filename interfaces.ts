@@ -14,7 +14,16 @@ export interface ITerminal extends IAutoId {
   command: string
 }
 
+export interface ISection {
+  name: string
+  type: string
+  value: string
+  meta?: { [key: string]: unknown }
+  sections?: ISection[]
+}
+
 export interface IConfig {
+  sections: ISection[]
   terminals: ITerminal[]
   shortcuts: IShortcut[]
   wsPort: number

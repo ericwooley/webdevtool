@@ -64,7 +64,6 @@ export async function startWebsocketServer(config: IConfig, port: number) {
       [COMMAND_TYPES.START_SESSION]: async (
         message: ISocketMessage<IStartCommand>
       ) => {
-        console.log({ config }, { terminals: config.terminals, message })
         const terminal = config.terminals.find(
           ({ id }) => message.payload.id === id
         )
@@ -75,14 +74,14 @@ export async function startWebsocketServer(config: IConfig, port: number) {
             payload: 'Command not found'
           })
         }
-        const child = spawn('/bin/bash', ['-c', terminal.command], {
+        const child = spawn('/bin/bash', ['-c', '$(which $SHELL)'], {
           name: 'xterm-color',
           cols: 80,
           rows: 30,
           env: process.env as any
         })
+        if (terminal.command) child.write(terminal.command + '\n')
         child.on('data', data => {
-          console.log({ data })
           sendMessage({
             ...message,
             type: COMMAND_TYPES.WRITE_STDOUT,
@@ -128,7 +127,6 @@ export async function startWebsocketServer(config: IConfig, port: number) {
         const decoded: ISocketMessage<unknown> = JSON.parse(
           message.utf8Data || '{}'
         )
-        console.log('command', decoded)
         if (!decoded.type)
           return connection.sendUTF(
             JSON.stringify({ error: 'malformed request' })

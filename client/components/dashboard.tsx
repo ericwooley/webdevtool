@@ -10,22 +10,17 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
-import Badge from '@material-ui/core/Badge'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import Link from '@material-ui/core/Link'
 import MenuIcon from '@material-ui/icons/Menu'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import NotificationsIcon from '@material-ui/icons/Notifications'
-import { SecondaryListItems, MainListItems } from './listItems'
-
-import Orders from './orders'
-import { IShortcut, ITerminal } from '../../interfaces'
-import Terminal from './terminal'
+import NavMenu from './navMenu'
+import { IShortcut, ITerminal, ISection } from '../../interfaces'
 import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp'
 import AdjustSharpIcon from '@material-ui/icons/AdjustSharp'
+import Section from './section'
 
 function Footer() {
   return (
@@ -121,6 +116,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard: React.FunctionComponent<{
   connected: boolean
+  sections: ISection[]
   shortcuts: IShortcut[]
   terminals: ITerminal[]
 }> = props => {
@@ -132,7 +128,6 @@ const Dashboard: React.FunctionComponent<{
   const handleDrawerClose = () => {
     setOpen(false)
   }
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
   return (
     <div className={classes.root}>
@@ -163,9 +158,12 @@ const Dashboard: React.FunctionComponent<{
           >
             Dashboard
           </Typography>
-          <IconButton color="inherit">
+          <IconButton>
             {props.connected ? (
-              <AdjustSharpIcon color="secondary" titleAccess="connected" />
+              <AdjustSharpIcon
+                style={{ color: 'white' }}
+                titleAccess="connected"
+              />
             ) : (
               <RadioButtonUncheckedSharpIcon
                 color="error"
@@ -189,29 +187,22 @@ const Dashboard: React.FunctionComponent<{
         </div>
         <Divider />
         <List>
-          <MainListItems terminals={props.terminals} />
-        </List>
-        <Divider />
-        <List>
-          <SecondaryListItems shortCuts={props.shortcuts} />
+          <NavMenu sections={props.sections} />
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth={false} className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Recent Deposits */}
+          <Grid container spacing={1}>
+            {props.sections.map(s => (
+              <Section key={s.name} section={s} />
+            ))}
+            {/* Recent Deposits
             {props.terminals.map((t, idx) => (
               <Grid key={t.name} item xs={12}>
                 <Terminal terminal={t} terminalID={idx} />
               </Grid>
-            ))}
-            {/* Recent Orders */}
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
+            ))} */}
           </Grid>
           <Box pt={4}>
             <Footer />

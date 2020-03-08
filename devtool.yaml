@@ -1,9 +1,32 @@
 name: pulse360
 brandColor: blue
 logo: ./logo.png
+sections:
+  - type: terminal
+    name: ping google
+    value: ping www.google.com
+    meta:
+      autostart: true
+      columns: 6
+      minHeight: 500
+    sections:
+      - type: url
+        name: google
+        value: https://www.google.com
+        meta:
+          autostart: true
+          columns: 4
+          minHeight: 250
+      - type: markdown
+        name: notes on google
+        value: ./README.md
+        meta:
+          autostart: true
+          columns: 4
+          minHeight: 250
 terminals:
   - name: start terminal
-    command: zsh
+    command: ''
   - name: ping google
     command: ping www.google.com
 shortcuts:

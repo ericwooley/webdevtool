@@ -1,19 +1,18 @@
 import React from 'react'
-import { ITerminal, ISocketMessage } from '../../interfaces'
+import { ITerminal, ISocketMessage } from '../../../interfaces'
 import 'xterm/css/xterm.css'
 import { Terminal as XTerminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
-import { server } from '../settings'
-import { Paper, Typography, Button } from '@material-ui/core'
-import KeyboardIcon from '@material-ui/icons/Keyboard'
-import Socket from '../socket'
-import { COMMAND_TYPES } from '../../enums'
-import { socket } from '../'
+import { server } from '../../settings'
+import { COMMAND_TYPES } from '../../../enums'
+import { socket } from '../..'
+import { IRenderSectionProps } from '../renderSection'
+import { ButtonGroup, Button } from '@material-ui/core'
+
 export default class Terminal extends React.Component<
   {
     terminal: ITerminal
-    terminalID: number | string
-  },
+  } & IRenderSectionProps,
   { running: boolean }
 > {
   state = { running: false }
@@ -63,21 +62,29 @@ export default class Terminal extends React.Component<
   }
   ref: React.RefObject<HTMLDivElement> = React.createRef()
   render() {
-    return (
-      <Paper>
-        <div>
-          <Typography>
-            <Button
-              onClick={this.connectTerminal}
-              disabled={this.state.running}
-            >
-              <KeyboardIcon />
-            </Button>
-            {this.props.terminal.name}
-          </Typography>
+    return this.props.children({
+      controls: (
+        <div key={'terminal-controls'}>
+          <ButtonGroup
+            color="primary"
+            aria-label="outlined primary button group"
+          >
+            <Button disabled>One</Button>
+            <Button>Two</Button>
+            <Button>Three</Button>
+          </ButtonGroup>
+          <ButtonGroup
+            variant="contained"
+            color="primary"
+            aria-label="contained primary button group"
+          >
+            <Button>One</Button>
+            <Button>Two</Button>
+            <Button>Three</Button>
+          </ButtonGroup>
         </div>
-        <div ref={this.ref}></div>
-      </Paper>
-    )
+      ),
+      body: <div key={'terminal-body'} ref={this.ref}></div>
+    })
   }
 }
