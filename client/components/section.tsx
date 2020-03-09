@@ -1,13 +1,11 @@
 import React from 'react'
 import { ISection } from '../../interfaces'
-import {
-  Avatar,
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Divider
-} from '@material-ui/core'
+import Avatar from '@material-ui/core/Avatar'
+import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import Divider from '@material-ui/core/Divider'
 import TypeIcon from './typeIcon'
 import RenderSection from './renderSection'
 import Markdown from './markdown'

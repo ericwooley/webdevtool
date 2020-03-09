@@ -3,7 +3,7 @@ import { ISection } from '../../../interfaces'
 
 import { IRenderSectionProps } from '../renderSection'
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
-import { Link } from '@material-ui/core'
+import Link from '@material-ui/core/Link'
 
 export default class UrlSection extends React.Component<
   {

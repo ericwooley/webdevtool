@@ -2,7 +2,7 @@ import React from 'react'
 import ComputerIcon from '@material-ui/icons/Computer'
 import BookmarksIcon from '@material-ui/icons/Bookmarks'
 import LiveHelpIcon from '@material-ui/icons/LiveHelp'
-import { SvgIconProps } from '@material-ui/core'
+import { SvgIconProps } from '@material-ui/core/SvgIcon'
 import DescriptionIcon from '@material-ui/icons/Description'
 
 const typeToIcon = (type: string) => {

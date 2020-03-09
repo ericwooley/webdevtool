@@ -1,15 +1,15 @@
 import React from 'react'
-import { ITerminal, ISocketMessage } from '../../../interfaces'
 import 'xterm/css/xterm.css'
 import { Terminal as XTerminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
-import { server } from '../../settings'
-import { COMMAND_TYPES } from '../../../enums'
-import { socket } from '../..'
-import { IRenderSectionProps } from '../renderSection'
+import { server } from '../../../settings'
+import { socket } from '../../..'
+import { IRenderSectionProps } from '../../renderSection'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
-import { ButtonGroup, Button } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import { ITerminal, ISocketMessage } from '../../../../interfaces'
+import { COMMAND_TYPES } from '../../../../enums'
 
 export default class Terminal extends React.Component<
   {

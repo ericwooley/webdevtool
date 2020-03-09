@@ -21,7 +21,8 @@ import { ISection } from '../../interfaces'
 import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp'
 import AdjustSharpIcon from '@material-ui/icons/AdjustSharp'
 import Section from './section'
-import { CircularProgress, Switch } from '@material-ui/core'
+import Switch from '@material-ui/core/Switch'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 function Footer() {

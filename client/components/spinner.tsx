@@ -1,6 +1,5 @@
-import styled from 'styled-components'
 import React from 'react'
-import { LinearProgress } from '@material-ui/core'
+import LinearProgress from '@material-ui/core/LinearProgress'
 export const Spinner: React.FunctionComponent = () => {
   return <LinearProgress />
 }

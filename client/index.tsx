@@ -5,7 +5,7 @@ import { settings, server } from './settings'
 import Dashboard from './components/dashboard'
 import { IConfig } from '../interfaces'
 import Socket from './socket'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core'
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 export const socket = new Socket({})
 const darkModeSettingsKey = `darkmode`

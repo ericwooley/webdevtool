@@ -46,6 +46,11 @@ try {
     })
   )
   app.use(express.static(join(__dirname, 'public')))
+  if(process.env.NODE_ENV === 'development') {
+    app.get('/', (req, res) => {
+      res.redirect('http://localhost:1234')
+    })
+  }
   app.get('/config', async (req, res) => res.json(devFile))
   app.get('/generateSessionId', async (req, res) => {
     randomBytes(48, function(err, buffer) {
@@ -57,7 +62,9 @@ try {
       res.json(buffer.toString('hex'))
     })
   })
-  app.listen(args.p, () => console.log('listening on', args.p))
+  app.listen(args.p, () =>
+    console.log(`listening on http://localhost:${args.p}`)
+  )
   startWebsocketServer(devFile, args.wsPort)
 } catch (e) {
   console.error('Server error', e)
