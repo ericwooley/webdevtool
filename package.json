@@ -23,6 +23,7 @@
     "build": "tsc && chmod +x build/server/server.js",
     "postbuild": "yarn build:parcel",
     "build:parcel": "parcel build src/client/index.html -d build/server/public",
+    "prerelease":"yarn build",
     "release": "np",
     "test": "exit 0"
   },
