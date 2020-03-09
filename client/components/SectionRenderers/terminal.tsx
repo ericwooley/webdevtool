@@ -8,7 +8,7 @@ import { COMMAND_TYPES } from '../../../enums'
 import { socket } from '../..'
 import { IRenderSectionProps } from '../renderSection'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
-
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import { ButtonGroup, Button } from '@material-ui/core'
 
 export default class Terminal extends React.Component<
@@ -18,16 +18,18 @@ export default class Terminal extends React.Component<
   { running: boolean }
 > {
   state = { running: false }
-  term = new XTerminal({})
+  term: XTerminal | null = null
+  sessionId = ''
   removeSocketListener: () => any = () => undefined
   componentWillUnmount() {
-    this.term.dispose()
-    this.removeSocketListener()
+    this.closeTerminal()
   }
   connectTerminal = async () => {
+    this.term = new XTerminal({})
     const { data: sessionId }: { data: string } = await server.get(
       '/generateSessionId'
     )
+    this.sessionId = sessionId
     this.setState(s => ({ ...s, running: true }))
     const term = this.term
     if (this.ref && this.ref.current) {
@@ -62,6 +64,19 @@ export default class Terminal extends React.Component<
       payload: this.props.section
     })
   }
+  closeTerminal = () => {
+    this.removeSocketListener()
+    if (this.ref.current?.innerHTML) {
+      this.ref.current.innerHTML = ''
+    }
+    if (this.term) this.term.dispose()
+    socket.sendMessage({
+      sessionId: this.sessionId,
+      type: COMMAND_TYPES.STOP_SESSION,
+      payload: this.props.section
+    })
+    this.setState({ running: false })
+  }
   ref: React.RefObject<HTMLDivElement> = React.createRef()
   render() {
     return (
@@ -74,12 +89,15 @@ export default class Terminal extends React.Component<
                 color="primary"
                 aria-label="contained primary button group"
               >
-                <Button
-                  disabled={this.state.running}
-                  onClick={this.connectTerminal}
-                >
-                  <PlayCircleOutlineIcon />
-                </Button>
+                {this.state.running ? (
+                  <Button onClick={this.closeTerminal}>
+                    <HighlightOffIcon />
+                  </Button>
+                ) : (
+                  <Button onClick={this.connectTerminal}>
+                    <PlayCircleOutlineIcon />
+                  </Button>
+                )}
                 <Button>Two</Button>
                 <Button>Three</Button>
               </ButtonGroup>

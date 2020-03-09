@@ -13,7 +13,9 @@ export interface ISection extends IAutoId {
 }
 export interface IShortcut extends ISection {}
 
-export interface ITerminal extends ISection {}
+export interface ITerminal extends ISection {
+  interactive?: boolean
+}
 
 export interface IConfig {
   sections: ISection[]

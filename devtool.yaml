@@ -5,6 +5,7 @@ sections:
   - type: terminal
     name: ping google
     value: ping www.google.com
+    interactive: true
     meta:
       autostart: true
       columns: 6

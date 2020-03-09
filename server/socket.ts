@@ -12,13 +12,12 @@ const stopProcess = (p: IPty) => {
   p.kill()
 }
 export async function startWebsocketServer(config: IConfig, port: number) {
-  const terminals = config.sections
+  const terminals: ITerminal[] = config.sections
     .flatMap(section => {
       const { sections = [], ...flatSection } = section
       return [flatSection, ...sections]
     })
     .filter(s => s.type === 'terminal')
-  console.log(terminals)
   const server = http.createServer(function(request, response) {
     console.log(new Date() + ' Received request for ' + request.url)
     // response.writeHead(404)
@@ -79,13 +78,18 @@ export async function startWebsocketServer(config: IConfig, port: number) {
             payload: 'Command not found'
           })
         }
-        const child = spawn('/bin/bash', ['-c', '$(which $SHELL)'], {
-          name: 'xterm-color',
-          cols: 80,
-          rows: 30,
-          env: process.env as any
-        })
-        if (terminal.value) {
+
+        const child = spawn(
+          '/bin/bash',
+          ['-c', terminal.interactive ? '$(which $SHELL)' : terminal.value],
+          {
+            name: 'xterm-color',
+            cols: 80,
+            rows: 30,
+            env: process.env as any
+          }
+        )
+        if (terminal.interactive) {
           child.write(terminal.value + '\n')
         }
         child.on('data', data => {
