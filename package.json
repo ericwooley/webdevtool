@@ -13,6 +13,9 @@
   "repository": {
     "url": "https://github.com/ericwooley/webdevtool.git"
   },
+  "np": {
+    "yarn": false
+  },
   "scripts": {
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch src/server/,devtool.yaml src/server/server.ts",
     "dev:client": "yarn parcel src/client/index.html",
