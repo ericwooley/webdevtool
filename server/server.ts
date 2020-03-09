@@ -8,6 +8,7 @@ import { startWebsocketServer } from './socket'
 import { IConfig, IAutoId } from '../interfaces'
 import { createHash, randomBytes } from 'crypto'
 import generateSectionIds from './generateSectionIds'
+import replaceFilesWithContents from './replaceFilesWIthContents'
 const generateAutoId = (algorithm: string) => {
   return <T extends IAutoId>(e: T): T => {
     const hasher = createHash(algorithm, {})
@@ -38,13 +39,12 @@ const args = yargs
   .help('h')
   .alias('h', 'help')
   .epilog('created by github.com/ericwooley').argv
-
+const devFilePath = join(process.cwd(), args.f)
 try {
-  const devFile: IConfig = parse(
-    readFileSync(join(process.cwd(), args.f)).toString()
-  )
+  const devFile: IConfig = parse(readFileSync(devFilePath).toString())
   devFile.wsPort = args.wsPort || devFile.wsPort
   devFile.sections = generateSectionIds(devFile.sections)
+  devFile.sections = replaceFilesWithContents(devFile.sections, devFilePath)
   const app = express()
   app.use(
     '*',

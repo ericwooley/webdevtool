@@ -4,11 +4,15 @@ export interface IAutoId {
   name: string
   id?: string
 }
+export interface ValueObject {
+  type: 'file'
+  path: string
+}
 export interface ISection extends IAutoId {
   id: string
   type: string
   description?: string
-  value: string
+  value: string // | ValueObject
   meta?: { columns?: number; [key: string]: unknown }
   sections?: ISection[]
 }

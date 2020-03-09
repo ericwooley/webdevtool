@@ -30,7 +30,9 @@ export default class Terminal extends React.Component<
     }
   }
   connectTerminal = async () => {
-    this.term = new XTerminal({})
+    this.term = new XTerminal({
+      disableStdin: !this.props.section.interactive
+    })
     const { data: sessionId }: { data: string } = await server.get(
       '/generateSessionId'
     )

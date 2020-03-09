@@ -5,18 +5,35 @@ import { settings, server } from './settings'
 import Dashboard from './components/dashboard'
 import { IConfig } from '../interfaces'
 import Socket from './socket'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core'
+
 export const socket = new Socket({})
+const darkModeSettingsKey = `darkmode`
+const darkTheme = createMuiTheme({
+  palette: {
+    type: 'dark'
+  }
+})
+const lightTheme = createMuiTheme({
+  palette: {
+    type: 'light'
+  }
+})
 class AppBody extends Component<
   {},
   {
     awaitingReconnect: boolean
     connected: boolean
+    darkMode: boolean
     config?: IConfig
   }
 > {
   constructor(props: any, context: any) {
     super(props, context)
     this.state = {
+      darkMode: JSON.parse(
+        localStorage.getItem(darkModeSettingsKey) || JSON.stringify(false)
+      ),
       awaitingReconnect: false,
       connected: socket.isConnected()
     }
@@ -41,6 +58,15 @@ class AppBody extends Component<
       connected: true
     })
   }
+  toggleDarkMode = () => {
+    localStorage.setItem(
+      darkModeSettingsKey,
+      JSON.stringify(!this.state.darkMode)
+    )
+    this.setState({
+      darkMode: !this.state.darkMode
+    })
+  }
   async componentDidMount() {
     await this.loadSettings()
   }
@@ -61,11 +87,15 @@ class AppBody extends Component<
   render() {
     if (!this.state.config) return <Spinner />
     return (
-      <Dashboard
-        name={this.state.config.name}
-        connected={this.state.connected}
-        sections={this.state.config.sections}
-      ></Dashboard>
+      <ThemeProvider theme={this.state.darkMode ? darkTheme : lightTheme}>
+        <Dashboard
+          darkMode={this.state.darkMode}
+          toggleDarkMode={this.toggleDarkMode}
+          name={this.state.config.name}
+          connected={this.state.connected}
+          sections={this.state.config.sections}
+        ></Dashboard>
+      </ThemeProvider>
     )
   }
 }

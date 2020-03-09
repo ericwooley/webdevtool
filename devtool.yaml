@@ -9,8 +9,8 @@ sections:
       ## This is a title for pinging google
 
       this is a description with a link
-      [here is a link](www.google.com)
-    # interactive: true
+      [here is a link](https://www.google.com)
+    interactive: true
     autostart: true
     sections:
       - type: url
@@ -20,6 +20,8 @@ sections:
           columns: 3
       - type: markdown
         name: notes on google
-        value: ./README.md
+        value:
+          type: file
+          path: ./README.md
         meta:
           columns: 9

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ISection } from '../../interfaces'
-import Terminal from './SectionRenderers/terminal'
-import Section from './section'
+import Terminal from './SectionRenderers/terminalSection'
+import Markdown from './SectionRenderers/markdownSection'
 import UrlSection from './SectionRenderers/urlSection'
 
 export interface IRenderSectionProps {
@@ -29,6 +29,8 @@ export default class RenderSection extends React.PureComponent<
         return Terminal
       case 'url':
         return UrlSection
+      case 'markdown':
+        return Markdown
       default:
         return UnknownType
     }

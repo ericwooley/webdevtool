@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core'
 import TypeIcon from './typeIcon'
 import RenderSection from './renderSection'
-import ReactMarkdown from 'react-markdown'
+import Markdown from './markdown'
 
 export default class Section extends React.Component<{
   section: ISection
@@ -41,7 +41,7 @@ export default class Section extends React.Component<{
               {section.description && (
                 <>
                   <CardContent>
-                    <ReactMarkdown source={section.description} />
+                    <Markdown>{section.description}</Markdown>
                   </CardContent>
                   <Divider />
                 </>

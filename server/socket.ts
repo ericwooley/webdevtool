@@ -130,7 +130,7 @@ export async function startWebsocketServer(config: IConfig, port: number) {
             type: COMMAND_TYPES.ERROR,
             payload: 'Session not found'
           })
-        session.process.write(message.payload)
+        if (session.terminal.interactive) session.process.write(message.payload)
       }
     }
     connection.on('message', function(message) {

@@ -17,11 +17,12 @@ import MenuIcon from '@material-ui/icons/Menu'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NavMenu from './navMenu'
-import { IShortcut, ITerminal, ISection } from '../../interfaces'
+import { ISection } from '../../interfaces'
 import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp'
 import AdjustSharpIcon from '@material-ui/icons/AdjustSharp'
 import Section from './section'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, Switch } from '@material-ui/core'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 function Footer() {
   return (
@@ -119,6 +120,8 @@ const Dashboard: React.FunctionComponent<{
   connected: boolean
   name: string
   sections: ISection[]
+  darkMode: boolean
+  toggleDarkMode: () => any
 }> = props => {
   const classes = useStyles()
   const drawerKey = `${props.name}.drawerOpen`
@@ -160,8 +163,18 @@ const Dashboard: React.FunctionComponent<{
             noWrap
             className={classes.title}
           >
-            Dashboard
+            {props.name}
           </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={props.darkMode}
+                onChange={props.toggleDarkMode}
+                value="DarkMode"
+              />
+            }
+            label="Dark Mode"
+          />
           <IconButton>
             {props.connected ? (
               <AdjustSharpIcon

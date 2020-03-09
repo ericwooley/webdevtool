@@ -6,12 +6,6 @@ import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
 import { Button, Link } from '@material-ui/core'
 import styled from 'styled-components'
 
-const Frame = styled.iframe`
-  height: 50%;
-  border: 0;
-  width: 100%;
-`
-
 export default class UrlSection extends React.Component<
   {
     section: ISection
