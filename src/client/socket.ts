@@ -45,9 +45,9 @@ export default class Socket {
   setPort = (port: string) => {
     this.port = port
   }
-  private reconnectInterval: number | null = null
-  private clearReconnectInterval = () => {
-    if (this.reconnectInterval !== null) clearInterval(this.reconnectInterval)
+  private reconnectTimeout: number | null = null
+  private clearReconnectTimeout = () => {
+    if (this.reconnectTimeout !== null) clearTimeout(this.reconnectTimeout)
   }
   private establishConnection = (connected?: () => any) => {
     if (!this.host) throw new Error('Host must be set')
@@ -69,14 +69,15 @@ export default class Socket {
       this.connected = false
       this.onCloseListeners.forEach(l => l())
       if (!this.preventConnection) {
-        this.clearReconnectInterval()
-        this.reconnectInterval = setInterval(() => {
+        this.clearReconnectTimeout()
+        this.reconnectTimeout = setTimeout(() => {
+          this.client?.close()
           if (!this.preventConnection && !this.connected) {
             this.establishConnection()
           } else {
-            this.clearReconnectInterval()
+            this.clearReconnectTimeout()
           }
-        }, 5000)
+        }, 1000)
       }
     }
     this.client.onmessage = e => {
