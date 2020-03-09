@@ -17,11 +17,11 @@ sections:
         name: google
         value: https://www.google.com
         meta:
-          columns: 3
+          columns: 2
       - type: markdown
-        name: notes on google
+        name: Notes on pinging google
         value:
           type: file
           path: ./README.md
         meta:
-          columns: 9
+          columns: 10

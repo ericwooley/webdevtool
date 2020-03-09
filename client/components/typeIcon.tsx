@@ -3,6 +3,7 @@ import ComputerIcon from '@material-ui/icons/Computer'
 import BookmarksIcon from '@material-ui/icons/Bookmarks'
 import LiveHelpIcon from '@material-ui/icons/LiveHelp'
 import { SvgIconProps } from '@material-ui/core'
+import DescriptionIcon from '@material-ui/icons/Description'
 
 const typeToIcon = (type: string) => {
   switch (type) {
@@ -10,6 +11,8 @@ const typeToIcon = (type: string) => {
       return BookmarksIcon
     case 'terminal':
       return ComputerIcon
+    case 'markdown':
+      return DescriptionIcon
     default:
       return LiveHelpIcon
   }

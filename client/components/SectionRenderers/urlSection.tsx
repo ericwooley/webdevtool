@@ -3,8 +3,7 @@ import { ISection } from '../../../interfaces'
 
 import { IRenderSectionProps } from '../renderSection'
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
-import { Button, Link } from '@material-ui/core'
-import styled from 'styled-components'
+import { Link } from '@material-ui/core'
 
 export default class UrlSection extends React.Component<
   {
@@ -18,15 +17,13 @@ export default class UrlSection extends React.Component<
         {this.props.children({
           controls: (
             <div key={'terminal-controls' + this.props.section.id}>
-              <Button variant="contained" color="primary">
-                <Link
-                  style={{ color: 'white' }}
-                  href={this.props.section.value}
-                  target="_blank"
-                >
-                  <OpenInBrowserIcon />
-                </Link>
-              </Button>
+              <Link
+                style={{ color: 'white' }}
+                href={this.props.section.value}
+                target="_blank"
+              >
+                <OpenInBrowserIcon />
+              </Link>
             </div>
           ),
           body: (
