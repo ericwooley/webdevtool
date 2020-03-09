@@ -5,17 +5,10 @@ import { join } from 'path'
 import { parse } from 'yaml'
 import cors from 'cors'
 import { startWebsocketServer } from './socket'
-import { IConfig, IAutoId } from '../interfaces'
-import { createHash, randomBytes } from 'crypto'
+import { IConfig } from '../interfaces'
+import { randomBytes } from 'crypto'
 import generateSectionIds from './generateSectionIds'
 import replaceFilesWithContents from './replaceFilesWIthContents'
-const generateAutoId = (algorithm: string) => {
-  return <T extends IAutoId>(e: T): T => {
-    const hasher = createHash(algorithm, {})
-    const id = e.id || hasher.update(e.name).digest('hex')
-    return { ...e, id }
-  }
-}
 const args = yargs
   .usage('Usage: $0 <command> [options]')
   .command('start', 'start serving a development service')
@@ -52,7 +45,7 @@ try {
       origin: '*'
     })
   )
-
+  app.use(express.static(join(__dirname, 'public')))
   app.get('/config', async (req, res) => res.json(devFile))
   app.get('/generateSessionId', async (req, res) => {
     randomBytes(48, function(err, buffer) {

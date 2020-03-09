@@ -6,7 +6,11 @@
   "license": "MIT",
   "scripts": {
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch server/,devtool.yaml server/server.ts",
-    "dev:client": "yarn parcel client/index.html"
+    "dev:client": "yarn parcel client/index.html",
+    "prebuild": "rm -rf build",
+    "build": "tsc",
+    "postbuild": "yarn build:parcel",
+    "build:parcel": "parcel build client/index.html -d build/server/public"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
