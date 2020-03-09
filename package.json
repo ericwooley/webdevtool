@@ -1,12 +1,15 @@
 {
   "name": "webdevtool",
-  "version": "1.0.1-0",
+  "version": "1.0.2-0",
   "bin": {
     "webdevtool": "build/server/server.js"
   },
   "description": "IDE for your terminal",
   "main": "build/index.js",
   "license": "MIT",
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch server/,devtool.yaml server/server.ts",
     "dev:client": "yarn parcel client/index.html",
