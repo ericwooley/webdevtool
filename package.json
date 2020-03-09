@@ -8,7 +8,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "files": [
-    "build/**/*"
+    "build"
   ],
   "scripts": {
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch server/,devtool.yaml server/server.ts",
