@@ -1,6 +1,6 @@
 {
   "name": "webdevtool",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "bin": {
     "webdevtool": "build/server/server.js"
   },
