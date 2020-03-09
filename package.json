@@ -8,8 +8,11 @@
   "main": "build/index.js",
   "license": "MIT",
   "files": [
-    "build"
+    "./build/**/*"
   ],
+  "repository": {
+    "url": "https://github.com/ericwooley/webdevtool.git"
+  },
   "scripts": {
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch server/,devtool.yaml server/server.ts",
     "dev:client": "yarn parcel client/index.html",
