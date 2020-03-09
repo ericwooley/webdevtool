@@ -20,7 +20,8 @@
     "build": "tsc && chmod +x build/server/server.js",
     "postbuild": "yarn build:parcel",
     "build:parcel": "parcel build client/index.html -d build/server/public",
-    "release": "np"
+    "release": "np",
+    "test": "exit 0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
