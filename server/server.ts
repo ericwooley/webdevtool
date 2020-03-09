@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import express from 'express'
 import yargs from 'yargs'
 import { readFileSync, promises as fs } from 'fs'
@@ -12,15 +13,15 @@ import replaceFilesWithContents from './replaceFilesWIthContents'
 const args = yargs
   .usage('Usage: $0 <command> [options]')
   .command('start', 'start serving a development service')
-  .example('$0 start', 'start the devtool using devtool.yaml')
+  .example('$0 start', 'start the webdevtool using webdevtool.yaml')
   .example(
-    '$0 start -f devtool.integration-tests.yaml',
-    'start the devtool with a custom file'
+    '$0 start -f webdevtool.integration-tests.yaml',
+    'start the webdevtool with a custom file'
   )
   .alias('f', 'file')
   .nargs('f', 1)
-  .default('f', 'devtool.yaml')
-  .describe('f', 'Load a devtool file')
+  .default('f', 'webdevtool.yaml')
+  .describe('f', 'Load a webdevtool file')
   .alias('p', 'port')
   .default('p', 4306)
   .describe('p', 'Port for serving the frontend')
@@ -46,7 +47,7 @@ try {
     })
   )
   app.use(express.static(join(__dirname, 'public')))
-  if(process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     app.get('/', (req, res) => {
       res.redirect('http://localhost:1234')
     })
