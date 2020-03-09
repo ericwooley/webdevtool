@@ -24,13 +24,3 @@ sections:
           autostart: true
           columns: 4
           minHeight: 250
-terminals:
-  - name: start terminal
-    command: ''
-  - name: ping google
-    command: ping www.google.com
-shortcuts:
-  - url: http://localhost:9000
-    name: webpack frontend
-  - url: http://localhost:3000
-    name: rails front end

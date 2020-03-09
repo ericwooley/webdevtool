@@ -20,12 +20,14 @@ const Initials = styled.span`
 
 const NavMenu: React.FunctionComponent<{
   sections: ISection[]
+  depth?: number
 }> = props => {
+  const { depth = 0 } = props
   return (
     <div>
       {props.sections.map(section => {
         return (
-          <>
+          <React.Fragment key={section.name + depth}>
             <ListItem button>
               <ListItemIcon>
                 <>
@@ -41,10 +43,10 @@ const NavMenu: React.FunctionComponent<{
             </ListItem>
             {section.sections && (
               <div style={{ borderLeft: '3px solid #333', marginLeft: 3 }}>
-                <NavMenu sections={section.sections} />
+                <NavMenu sections={section.sections} depth={depth + 1} />
               </div>
             )}
-          </>
+          </React.Fragment>
         )
       })}
     </div>

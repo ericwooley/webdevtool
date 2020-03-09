@@ -12,6 +12,13 @@ const stopProcess = (p: IPty) => {
   p.kill()
 }
 export async function startWebsocketServer(config: IConfig, port: number) {
+  const terminals = config.sections
+    .flatMap(section => {
+      const { sections = [], ...flatSection } = section
+      return [flatSection, ...sections]
+    })
+    .filter(s => s.type === 'terminal')
+  console.log(terminals)
   const server = http.createServer(function(request, response) {
     console.log(new Date() + ' Received request for ' + request.url)
     // response.writeHead(404)
@@ -64,9 +71,7 @@ export async function startWebsocketServer(config: IConfig, port: number) {
       [COMMAND_TYPES.START_SESSION]: async (
         message: ISocketMessage<IStartCommand>
       ) => {
-        const terminal = config.terminals.find(
-          ({ id }) => message.payload.id === id
-        )
+        const terminal = terminals.find(({ id }) => message.payload.id === id)
         if (!terminal) {
           return sendMessage({
             ...message,
@@ -80,7 +85,9 @@ export async function startWebsocketServer(config: IConfig, port: number) {
           rows: 30,
           env: process.env as any
         })
-        if (terminal.command) child.write(terminal.command + '\n')
+        if (terminal.value) {
+          child.write(terminal.value + '\n')
+        }
         child.on('data', data => {
           sendMessage({
             ...message,

@@ -4,28 +4,19 @@ export interface IAutoId {
   name: string
   id?: string
 }
-export interface IShortcut extends IAutoId {
+export interface ISection extends IAutoId {
   id: string
-  url: string
-}
-
-export interface ITerminal extends IAutoId {
-  id: string
-  command: string
-}
-
-export interface ISection {
-  name: string
   type: string
   value: string
   meta?: { [key: string]: unknown }
   sections?: ISection[]
 }
+export interface IShortcut extends ISection {}
+
+export interface ITerminal extends ISection {}
 
 export interface IConfig {
   sections: ISection[]
-  terminals: ITerminal[]
-  shortcuts: IShortcut[]
   wsPort: number
   name: string
   brandColor: string

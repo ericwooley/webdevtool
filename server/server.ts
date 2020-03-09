@@ -7,6 +7,7 @@ import cors from 'cors'
 import { startWebsocketServer } from './socket'
 import { IConfig, IAutoId } from '../interfaces'
 import { createHash, randomBytes } from 'crypto'
+import generateSectionIds from './generateSectionIds'
 const generateAutoId = (algorithm: string) => {
   return <T extends IAutoId>(e: T): T => {
     const hasher = createHash(algorithm, {})
@@ -42,9 +43,8 @@ try {
   const devFile: IConfig = parse(
     readFileSync(join(process.cwd(), args.f)).toString()
   )
-  devFile.shortcuts = devFile.shortcuts.map(generateAutoId('sha256'))
-  devFile.terminals = devFile.terminals.map(generateAutoId('sha256'))
   devFile.wsPort = args.wsPort || devFile.wsPort
+  devFile.sections = generateSectionIds(devFile.sections)
   const app = express()
   app.use(
     '*',

@@ -1,6 +1,7 @@
 import React from 'react'
 import { ISection } from '../../interfaces'
 import Terminal from './SectionRenderers/terminal'
+import Section from './section'
 
 export interface IRenderSectionProps {
   section: ISection
@@ -32,7 +33,7 @@ export default class RenderSection extends React.PureComponent<
   render() {
     const SectionComponent = this.getSectionType()
     return (
-      <SectionComponent section={this.props.section}>
+      <SectionComponent key={this.props.section.type} section={this.props.section}>
         {this.props.children}
       </SectionComponent>
     )

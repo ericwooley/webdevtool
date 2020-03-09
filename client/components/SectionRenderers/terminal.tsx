@@ -7,11 +7,13 @@ import { server } from '../../settings'
 import { COMMAND_TYPES } from '../../../enums'
 import { socket } from '../..'
 import { IRenderSectionProps } from '../renderSection'
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
+
 import { ButtonGroup, Button } from '@material-ui/core'
 
 export default class Terminal extends React.Component<
   {
-    terminal: ITerminal
+    section: ITerminal
   } & IRenderSectionProps,
   { running: boolean }
 > {
@@ -57,34 +59,40 @@ export default class Terminal extends React.Component<
     socket.sendMessage({
       sessionId,
       type: COMMAND_TYPES.START_SESSION,
-      payload: this.props.terminal
+      payload: this.props.section
     })
   }
   ref: React.RefObject<HTMLDivElement> = React.createRef()
   render() {
-    return this.props.children({
-      controls: (
-        <div key={'terminal-controls'}>
-          <ButtonGroup
-            color="primary"
-            aria-label="outlined primary button group"
-          >
-            <Button disabled>One</Button>
-            <Button>Two</Button>
-            <Button>Three</Button>
-          </ButtonGroup>
-          <ButtonGroup
-            variant="contained"
-            color="primary"
-            aria-label="contained primary button group"
-          >
-            <Button>One</Button>
-            <Button>Two</Button>
-            <Button>Three</Button>
-          </ButtonGroup>
-        </div>
-      ),
-      body: <div key={'terminal-body'} ref={this.ref}></div>
-    })
+    return (
+      <React.Fragment key={'terminal'}>
+        {this.props.children({
+          controls: (
+            <div key={'terminal-controls' + this.props.section.id}>
+              <ButtonGroup
+                variant="contained"
+                color="primary"
+                aria-label="contained primary button group"
+              >
+                <Button
+                  disabled={this.state.running}
+                  onClick={this.connectTerminal}
+                >
+                  <PlayCircleOutlineIcon />
+                </Button>
+                <Button>Two</Button>
+                <Button>Three</Button>
+              </ButtonGroup>
+            </div>
+          ),
+          body: (
+            <div
+              key={'terminal-body' + this.props.section.id}
+              ref={this.ref}
+            ></div>
+          )
+        })}
+      </React.Fragment>
+    )
   }
 }
