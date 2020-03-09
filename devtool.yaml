@@ -5,23 +5,21 @@ sections:
   - type: terminal
     name: ping google
     value: ping www.google.com
-    interactive: true
-    meta:
-      autostart: true
-      columns: 6
-      minHeight: 500
+    description: >
+      ## This is a title for pinging google
+
+      this is a description with a link
+      [here is a link](www.google.com)
+    # interactive: true
+    autostart: true
     sections:
       - type: url
         name: google
         value: https://www.google.com
         meta:
-          autostart: true
-          columns: 4
-          minHeight: 250
+          columns: 3
       - type: markdown
         name: notes on google
         value: ./README.md
         meta:
-          autostart: true
-          columns: 4
-          minHeight: 250
+          columns: 9

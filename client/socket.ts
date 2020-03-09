@@ -6,6 +6,12 @@ interface IListener {
 interface IListenerFilter {
   (message: ISocketMessage): boolean
 }
+interface IOpenListener {
+  (): any
+}
+interface ICloseListener {
+  (): any
+}
 export default class Socket {
   private client?: W3CWebSocket
   private connected: boolean = false
@@ -52,16 +58,16 @@ export default class Socket {
     console.log('connecting: ', wsServer)
     this.client = new W3CWebSocket(wsServer, 'echo-protocol')
     this.client.onopen = () => {
-      console.log('connected')
       this.connected = true
+      this.onOpenListeners.forEach(l => l())
       if (connected) {
         connected()
         connected = undefined
       }
     }
-    this.client.onclose = (e) => {
-      console.log('disconnected')
+    this.client.onclose = e => {
       this.connected = false
+      this.onCloseListeners.forEach(l => l())
       if (!this.preventConnection) {
         this.clearReconnectInterval()
         this.reconnectInterval = setInterval(() => {
@@ -84,6 +90,22 @@ export default class Socket {
   }
   sendMessage = (message: ISocketMessage) => {
     this.client?.send(JSON.stringify(message))
+  }
+  private onOpenListeners: IOpenListener[] = []
+  onOpen = (listener: IOpenListener) => {
+    this.onOpenListeners.push(listener)
+    return () => {
+      this.onOpenListeners = this.onOpenListeners.filter(l => l !== listener)
+      return null as any
+    }
+  }
+  private onCloseListeners: ICloseListener[] = []
+  onClose = (listener: ICloseListener) => {
+    this.onCloseListeners.push(listener)
+    return () => {
+      this.onCloseListeners = this.onCloseListeners.filter(l => l !== listener)
+      return null as any
+    }
   }
   addListener = (listener: IListener, filter?: IListenerFilter) => {
     const l = {

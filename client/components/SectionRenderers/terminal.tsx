@@ -24,6 +24,11 @@ export default class Terminal extends React.Component<
   componentWillUnmount() {
     this.closeTerminal()
   }
+  componentDidMount() {
+    if (this.props.section.autostart) {
+      this.connectTerminal()
+    }
+  }
   connectTerminal = async () => {
     this.term = new XTerminal({})
     const { data: sessionId }: { data: string } = await server.get(
@@ -84,23 +89,23 @@ export default class Terminal extends React.Component<
         {this.props.children({
           controls: (
             <div key={'terminal-controls' + this.props.section.id}>
-              <ButtonGroup
-                variant="contained"
-                color="primary"
-                aria-label="contained primary button group"
-              >
-                {this.state.running ? (
-                  <Button onClick={this.closeTerminal}>
-                    <HighlightOffIcon />
-                  </Button>
-                ) : (
-                  <Button onClick={this.connectTerminal}>
-                    <PlayCircleOutlineIcon />
-                  </Button>
-                )}
-                <Button>Two</Button>
-                <Button>Three</Button>
-              </ButtonGroup>
+              {this.state.running ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.closeTerminal}
+                >
+                  <HighlightOffIcon />
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.connectTerminal}
+                >
+                  <PlayCircleOutlineIcon />
+                </Button>
+              )}
             </div>
           ),
           body: (

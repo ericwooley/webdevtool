@@ -7,14 +7,16 @@ export interface IAutoId {
 export interface ISection extends IAutoId {
   id: string
   type: string
+  description?: string
   value: string
-  meta?: { [key: string]: unknown }
+  meta?: { columns?: number; [key: string]: unknown }
   sections?: ISection[]
 }
 export interface IShortcut extends ISection {}
 
 export interface ITerminal extends ISection {
   interactive?: boolean
+  autostart?: boolean
 }
 
 export interface IConfig {

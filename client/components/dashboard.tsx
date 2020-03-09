@@ -21,6 +21,7 @@ import { IShortcut, ITerminal, ISection } from '../../interfaces'
 import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp'
 import AdjustSharpIcon from '@material-ui/icons/AdjustSharp'
 import Section from './section'
+import { CircularProgress } from '@material-ui/core'
 
 function Footer() {
   return (
@@ -116,19 +117,22 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard: React.FunctionComponent<{
   connected: boolean
+  name: string
   sections: ISection[]
-  shortcuts: IShortcut[]
-  terminals: ITerminal[]
 }> = props => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
+  const drawerKey = `${props.name}.drawerOpen`
+  const [open, setOpen] = React.useState(
+    JSON.parse(localStorage.getItem(drawerKey) || JSON.stringify(false))
+  )
   const handleDrawerOpen = () => {
+    localStorage.setItem(drawerKey, JSON.stringify(true))
     setOpen(true)
   }
   const handleDrawerClose = () => {
+    localStorage.setItem(drawerKey, JSON.stringify(false))
     setOpen(false)
   }
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -193,17 +197,22 @@ const Dashboard: React.FunctionComponent<{
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth={false} className={classes.container}>
-          <Grid container spacing={1}>
-            {props.sections.map(s => (
-              <Section key={s.name} section={s} />
-            ))}
-            {/* Recent Deposits
-            {props.terminals.map((t, idx) => (
-              <Grid key={t.name} item xs={12}>
-                <Terminal terminal={t} terminalID={idx} />
-              </Grid>
-            ))} */}
-          </Grid>
+          {props.connected ? (
+            <Grid container spacing={1}>
+              {props.sections.map(s => (
+                <Section key={s.name} section={s} />
+              ))}
+            </Grid>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress size="5rem" />
+              <br />
+              <br />
+              <Typography variant="body2" color="textSecondary" align="center">
+                Waiting for socket connection
+              </Typography>
+            </div>
+          )}
           <Box pt={4}>
             <Footer />
           </Box>
