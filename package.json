@@ -5,10 +5,10 @@
     "webdevtool": "build/server/server.js"
   },
   "description": "IDE for your terminal",
-  "main": "build/index.js",
+  "main": "build/server/index.js",
   "license": "MIT",
   "files": [
-    "./build"
+    "**/*"
   ],
   "repository": {
     "url": "https://github.com/ericwooley/webdevtool.git"
