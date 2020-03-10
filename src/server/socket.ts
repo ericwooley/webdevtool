@@ -28,6 +28,7 @@ function killSessionProcesses(sessions: IProcessTracker) {
   })
 }
 
+
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received.')
   process.exit(143)
@@ -67,11 +68,10 @@ export async function startWebsocketServer(config: IConfig, port: number) {
       .forEach(killSessionProcesses)
   }
 
-  process.on('beforeExit', () => {
-    console.log('cleaning up sessions')
+
+  process.on('exit', code => {
     closeAllSessionProcesses()
   })
-  process.on('exit', code => console.log(`exit code: ${code}`))
 
   const terminals: ITerminal[] = config.sections
     .flatMap(section => {
@@ -83,11 +83,20 @@ export async function startWebsocketServer(config: IConfig, port: number) {
     process.exit()
   })
   wsServer.on('error', () => {
-    console.log('no error')
-    process.exit(0)
+    process.exit(1)
   })
   wsServer.on('listening', () => {
     console.log(new Date() + ` Server is listening on port ${port}`)
+    const readline = require('readline');
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    })
+    rl.question('press enter to exit', (answer: string) => {
+      console.log('shutting down')
+      rl.close()
+      process.exit()
+    })
   })
   // this is not a very memory efficient way to set this up, but this
   // should be single user, so I'm not too concerned at the moment.

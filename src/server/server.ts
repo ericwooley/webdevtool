@@ -10,6 +10,8 @@ import { IConfig } from '../interfaces'
 import { randomBytes } from 'crypto'
 import generateSectionIds from './generateSectionIds'
 import replaceFilesWithContents from './replaceFilesWIthContents'
+
+
 const args = yargs
   .usage('Usage: $0 <command> [options]')
   .command('start', 'start serving a development service')
@@ -73,5 +75,6 @@ try {
   startWebsocketServer(devFile, args.wsPort)
 } catch (e) {
   console.error('Server error', e)
-  process.exitCode = 1
+
+  process.exit(1)
 }
