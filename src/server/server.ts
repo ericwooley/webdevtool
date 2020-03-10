@@ -66,6 +66,10 @@ try {
   app.listen(args.p, () =>
     console.log(`listening on http://localhost:${args.p}`)
   )
+  app.on('close', () => {
+    console.log('exit from express')
+    process.exit()
+  })
   startWebsocketServer(devFile, args.wsPort)
 } catch (e) {
   console.error('Server error', e)
