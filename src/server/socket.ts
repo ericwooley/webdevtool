@@ -92,7 +92,7 @@ export async function startWebsocketServer(config: IConfig, port: number) {
       input: process.stdin,
       output: process.stdout
     })
-    rl.question('press enter to exit', (answer: string) => {
+    rl.question('\n\npress enter to exit, SIGINT and SIGKILL may leave dangling processes\n\n', (answer: string) => {
       console.log('shutting down')
       rl.close()
       process.exit()
