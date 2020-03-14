@@ -24,6 +24,8 @@ import Section from './section'
 import Switch from '@material-ui/core/Switch'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import { socket } from '../'
+import { COMMAND_TYPES } from '../../enums'
 
 function Footer() {
   return (
@@ -124,6 +126,14 @@ const Dashboard: React.FunctionComponent<{
   darkMode: boolean
   toggleDarkMode: () => any
 }> = props => {
+  const confirmShutdown = React.useCallback(() => {
+    if (confirm('Are you sure you want to kill the server?'))
+      socket.sendMessage({
+        sessionId: '',
+        type: COMMAND_TYPES.SHUTDOWN,
+        payload: {}
+      })
+  }, [])
   const classes = useStyles()
   const drawerKey = `${props.name}.drawerOpen`
   const [open, setOpen] = React.useState(
@@ -176,7 +186,7 @@ const Dashboard: React.FunctionComponent<{
             }
             label="Dark Mode"
           />
-          <IconButton>
+          <IconButton onClick={props.connected ? confirmShutdown : undefined}>
             {props.connected ? (
               <AdjustSharpIcon
                 style={{ color: 'white' }}

@@ -28,7 +28,6 @@ function killSessionProcesses(sessions: IProcessTracker) {
   })
 }
 
-
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received.')
   process.exit(143)
@@ -64,13 +63,17 @@ export async function startWebsocketServer(config: IConfig, port: number) {
   const connectionSessions: { [key: string]: IProcessTracker } = {}
   const closeAllSessionProcesses = () => {
     Object.values(connectionSessions)
-      .filter(s => s)
-      .forEach(killSessionProcesses)
+      .filter(s => s && s.process)
+      .forEach(s => {
+        console.log('killing', s)
+        killSessionProcesses(s)
+        console.log('killed', s)
+      })
   }
-
 
   process.on('exit', code => {
     closeAllSessionProcesses()
+    console.log('exiting')
   })
 
   const terminals: ITerminal[] = config.sections
@@ -87,16 +90,6 @@ export async function startWebsocketServer(config: IConfig, port: number) {
   })
   wsServer.on('listening', () => {
     console.log(new Date() + ` Server is listening on port ${port}`)
-    const readline = require('readline');
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-    rl.question('\n\npress enter to exit, SIGINT and SIGKILL may leave dangling processes\n\n', (answer: string) => {
-      console.log('shutting down')
-      rl.close()
-      process.exit()
-    })
   })
   // this is not a very memory efficient way to set this up, but this
   // should be single user, so I'm not too concerned at the moment.
@@ -179,6 +172,11 @@ export async function startWebsocketServer(config: IConfig, port: number) {
             payload: 'Session not found'
           })
         if (session.terminal.interactive) session.process.write(message.payload)
+      },
+      [COMMAND_TYPES.SHUTDOWN]: async (message: ISocketMessage) => {
+        console.log('recieved shutdown request')
+        closeAllSessionProcesses()
+        process.exit()
       }
     }
     connection.on('message', function(message) {
