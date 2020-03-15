@@ -6,7 +6,6 @@ import {
   readFileSync,
   promises as fs,
   writeFileSync,
-  writeFile,
   unlinkSync
 } from 'fs'
 import { join } from 'path'
@@ -17,7 +16,7 @@ import { IConfig } from '../interfaces'
 import { randomBytes } from 'crypto'
 import generateSectionIds from './generateSectionIds'
 import replaceFilesWithContents from './replaceFilesWIthContents'
-import { fork } from 'child_process'
+import { spawn } from 'child_process'
 import WebSocket from 'ws'
 import { COMMAND_TYPES } from '../enums'
 import { createServer } from 'http'
@@ -91,10 +90,10 @@ const argsFromYarn = yargs
         const argsForChild = [__filename, ...process.argv.slice(3), 'server']
         const runtime =
           process.env.NODE_ENV === 'development'
-            ? require.resolve('ts-node')
+            ? 'ts-node'
             : 'node'
         console.log('starting server with options: ', runtime, argsForChild)
-        const child = fork(runtime, argsForChild)
+        const child = spawn(runtime, argsForChild)
 
         child.on('exit', code => process.exit(code || 0))
 
