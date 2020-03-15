@@ -9,11 +9,35 @@ import Divider from '@material-ui/core/Divider'
 import TypeIcon from './typeIcon'
 import RenderSection from './renderSection'
 import Markdown from './markdown'
+import Switch from '@material-ui/core/Switch'
+import { Typography } from '@material-ui/core'
 
-export default class Section extends React.Component<{
-  section: ISection
-  depth?: number
-}> {
+export default class Section extends React.Component<
+  {
+    section: ISection
+    depth?: number
+  },
+  {
+    descriptionVisible: boolean
+    contentVisible: boolean
+  }
+> {
+  state = {
+    descriptionVisible: false,
+    contentVisible: true
+  }
+  toggleDescription = () => {
+    this.setState(s => ({
+      ...s,
+      descriptionVisible: !s.descriptionVisible
+    }))
+  }
+  toggleContent = () => {
+    this.setState(s => ({
+      ...s,
+      contentVisible: !s.contentVisible
+    }))
+  }
   render() {
     const { section, depth = 1 } = this.props
     const defaultColumns = depth > 1 ? 6 : 12
@@ -39,12 +63,43 @@ export default class Section extends React.Component<{
               {section.description && (
                 <>
                   <CardContent>
-                    <Markdown>{section.description}</Markdown>
+                    <Typography align="right">
+                      {!this.state.descriptionVisible && `${this.props.section.name} description hidden`}
+                      <Switch
+                        checked={this.state.descriptionVisible}
+                        onChange={this.toggleDescription}
+                      />
+                    </Typography>
+                    <div
+                      style={{
+                        display: this.state.descriptionVisible
+                          ? undefined
+                          : 'none'
+                      }}
+                    >
+                      <Markdown>{section.description}</Markdown>
+                    </div>
                   </CardContent>
                   <Divider />
                 </>
               )}
-              <CardContent>{body}</CardContent>
+              <CardContent>
+                <Typography align="right">
+                  {!this.state.contentVisible && `${this.props.section.name} hidden`}
+                  <Switch
+
+                    checked={this.state.contentVisible}
+                    onChange={this.toggleContent}
+                  />
+                </Typography>
+                <div
+                  style={{
+                    display: this.state.contentVisible ? undefined : 'none'
+                  }}
+                >
+                  {body}
+                </div>
+              </CardContent>
               {section.sections && (
                 <Grid container spacing={1} style={{ padding: 5 }}>
                   {section.sections.map(s => {
