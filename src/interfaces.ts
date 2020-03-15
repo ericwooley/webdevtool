@@ -25,10 +25,10 @@ export interface ITerminal extends ISection {
 
 export interface IConfig {
   sections: ISection[]
-  wsPort: number
   name: string
   brandColor: string
   logo: string
+  port: number
 }
 
 export interface IStartCommand {

@@ -79,7 +79,7 @@ class AppBody extends Component<
     }))
     if (!socket.isConnected()) {
       socket.setHost(settings.devToolHost)
-      socket.setPort(`${data.wsPort}`)
+      socket.setPort(`${data.port}`)
       await socket.connect()
       this.forceUpdate()
     }

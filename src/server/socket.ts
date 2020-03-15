@@ -1,4 +1,4 @@
-import { Server } from 'ws'
+import { Server as WSServer } from 'ws'
 import { spawn, IPty } from 'node-pty'
 import {
   IConfig,
@@ -7,6 +7,7 @@ import {
   ITerminal
 } from '../interfaces'
 import { COMMAND_TYPES } from '../enums'
+import { Server } from 'http'
 const stopProcess = (p: IPty) => {
   p.kill()
 }
@@ -36,9 +37,9 @@ process.on('SIGINT', () => {
   console.log('SIGINT signal received.')
   process.exit(2)
 })
-export async function startWebsocketServer(config: IConfig, port: number) {
-  const wsServer = new Server({
-    port: port,
+export async function startWebsocketServer(config: IConfig, server: Server) {
+  const wsServer = new WSServer({
+    server,
     perMessageDeflate: {
       zlibDeflateOptions: {
         // See zlib defaults.
@@ -89,7 +90,7 @@ export async function startWebsocketServer(config: IConfig, port: number) {
     process.exit(1)
   })
   wsServer.on('listening', () => {
-    console.log(new Date() + ` Server is listening on port ${port}`)
+    console.log(new Date() + `Websockets started`)
   })
   // this is not a very memory efficient way to set this up, but this
   // should be single user, so I'm not too concerned at the moment.

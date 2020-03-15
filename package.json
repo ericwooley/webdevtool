@@ -17,8 +17,8 @@
     "yarn": false
   },
   "scripts": {
-    "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch src/server/,devtool.yaml src/server/server.ts",
-    "dev:server:no-restart": "yarn ts-node src/server/server.ts",
+    "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch src/server/,devtool.yaml src/server/server.ts server",
+    "dev:server:no-restart": "yarn ts-node src/server/server.ts server",
     "dev:client": "yarn parcel src/client/index.html",
     "prebuild": "rm -rf build",
     "build": "tsc && chmod +x build/server/server.js",
@@ -26,7 +26,8 @@
     "build:parcel": "parcel build src/client/index.html -d build/server/public",
     "prerelease": "yarn build",
     "release": "np",
-    "test": "exit 0"
+    "test": "exit 0",
+    "webdevtool": "ts-node src/server/server.ts"
   },
   "devDependencies": {
     "@material-ui/core": "^4.9.5",

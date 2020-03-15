@@ -20,6 +20,7 @@ import replaceFilesWithContents from './replaceFilesWIthContents'
 import { fork } from 'child_process'
 import WebSocket from 'ws'
 import { COMMAND_TYPES } from '../enums'
+import { createServer } from 'http'
 
 const lockFile = join(process.cwd(), 'webdevtool.lock')
 const getLockInfo = (): ILockInfo =>
@@ -41,8 +42,6 @@ const argsFromYarn = yargs
   .alias('p', 'port')
   .default('p', 4306)
   .describe('p', 'Port for serving the frontend')
-  .describe('wsPort', 'Port for websocket connections')
-  .default('wsPort', 4307)
   .alias('d', 'dev')
   .alias('s', 'startForeground')
   .describe('s', 'Start server in foreground')
@@ -58,17 +57,18 @@ const argsFromYarn = yargs
     () => {},
     args => {
       try {
-        const { pid, wsPort } = getLockInfo()
+        const { pid, port } = getLockInfo()
         console.error('kill daemon on pid:', pid.toString())
-        const client = new WebSocket(`ws://localhost:${wsPort}`)
+        const client = new WebSocket(`ws://localhost:${port}`)
         client.on('open', () => {
-          console.log('opened')
-          client.send({
-            type: COMMAND_TYPES.SHUTDOWN
-          })
+          console.log('sending kill signal')
+          client.send(
+            JSON.stringify({
+              type: COMMAND_TYPES.SHUTDOWN
+            })
+          )
+          process.exit()
         })
-        unlinkSync(lockFile)
-        process.exit()
       } catch (e) {
         console.error(
           'could not kill webdevtool for project:',
@@ -95,7 +95,6 @@ const argsFromYarn = yargs
             : 'node'
         console.log('starting server with options: ', runtime, argsForChild)
         const child = fork(runtime, argsForChild)
-        saveLockInfo({ pid: child.pid, ...args })
 
         child.on('exit', code => process.exit(code || 0))
 
@@ -111,11 +110,12 @@ const argsFromYarn = yargs
     'Start server in foreground',
     () => {},
     args => {
-      console.log({ args })
+      saveLockInfo({ pid: process.pid, ...args })
+      process.on('exit', () => unlinkSync(lockFile))
       const devFilePath = join(process.cwd(), args.f)
       try {
         const devFile: IConfig = parse(readFileSync(devFilePath).toString())
-        devFile.wsPort = args.wsPort || devFile.wsPort
+        devFile.port = args.p
         devFile.sections = generateSectionIds(devFile.sections)
         devFile.sections = replaceFilesWithContents(
           devFile.sections,
@@ -145,14 +145,17 @@ const argsFromYarn = yargs
             res.json(buffer.toString('hex'))
           })
         })
-        app.listen(args.p, () =>
+        const server = createServer(app)
+
+        startWebsocketServer(devFile, server)
+
+        server.listen(args.p, () =>
           console.log(`listening on http://localhost:${args.p}`)
         )
         app.on('close', () => {
           console.log('exit from express')
           process.exit()
         })
-        startWebsocketServer(devFile, args.wsPort)
       } catch (e) {
         console.error('Server error', e)
 
