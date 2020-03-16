@@ -8,7 +8,7 @@
   "main": "build/server/index.js",
   "license": "MIT",
   "files": [
-    "**/*"
+    "build/**/*"
   ],
   "repository": {
     "url": "https://github.com/ericwooley/webdevtool.git"
