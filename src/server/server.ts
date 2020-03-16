@@ -2,12 +2,7 @@
 
 import express from 'express'
 import yargs from 'yargs'
-import {
-  readFileSync,
-  promises as fs,
-  writeFileSync,
-  unlinkSync
-} from 'fs'
+import { readFileSync, promises as fs, writeFileSync, unlinkSync } from 'fs'
 import { join } from 'path'
 import { parse } from 'yaml'
 import cors from 'cors'
@@ -21,12 +16,12 @@ import WebSocket from 'ws'
 import { COMMAND_TYPES } from '../enums'
 import { createServer } from 'http'
 
-const lockFile = join(process.cwd(), 'webdevtool.lock')
-const getLockInfo = (): ILockInfo =>
-  JSON.parse(readFileSync(lockFile).toString())
+const lockFile = (filename: string) => join(process.cwd(), `${filename}.lock`)
+const getLockInfo = (fileName: string): ILockInfo =>
+  JSON.parse(readFileSync(lockFile(fileName)).toString())
 
-const saveLockInfo = (settings: ILockInfo) =>
-  writeFileSync(lockFile, JSON.stringify(settings, null, 2))
+const saveLockInfo = (settings: ILockInfo, fileName: string) =>
+  writeFileSync(lockFile(fileName), JSON.stringify(settings, null, 2))
 const argsFromYarn = yargs
   .usage('Usage: $0 <command> [options]')
   .example('$0 start', 'start the webdevtool using webdevtool.yaml')
@@ -56,7 +51,7 @@ const argsFromYarn = yargs
     () => {},
     args => {
       try {
-        const { pid, port } = getLockInfo()
+        const { pid, port } = getLockInfo(args.f)
         console.error('kill daemon on pid:', pid.toString())
         const client = new WebSocket(`ws://localhost:${port}`)
         client.on('open', () => {
@@ -83,15 +78,13 @@ const argsFromYarn = yargs
     () => {},
     args => {
       try {
-        const pid = readFileSync(lockFile)
+        const pid = readFileSync(lockFile(args.f))
         console.error('Already running, pid:', pid.toString())
         process.exit()
       } catch (e) {
         const argsForChild = [__filename, ...process.argv.slice(3), 'server']
         const runtime =
-          process.env.NODE_ENV === 'development'
-            ? 'ts-node'
-            : 'node'
+          process.env.NODE_ENV === 'development' ? 'ts-node' : 'node'
         console.log('starting server with options: ', runtime, argsForChild)
         const child = spawn(runtime, argsForChild)
 
@@ -109,8 +102,8 @@ const argsFromYarn = yargs
     'Start server in foreground',
     () => {},
     args => {
-      saveLockInfo({ pid: process.pid, ...args })
-      process.on('exit', () => unlinkSync(lockFile))
+      saveLockInfo({ pid: process.pid, ...args }, args.f)
+      process.on('exit', () => unlinkSync(lockFile(args.f)))
       const devFilePath = join(process.cwd(), args.f)
       try {
         const devFile: IConfig = parse(readFileSync(devFilePath).toString())

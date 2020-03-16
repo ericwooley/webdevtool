@@ -1,0 +1,20 @@
+name: pulse360
+sections:
+  - type: markdown
+    name: Readme
+    value:
+      type: file
+      value: ./README.md
+    sections:
+      - type: terminal
+        name: server
+        value: npm run dev:server
+        meta:
+          columns: 6
+      - type: terminal
+        name: client
+        value: npm run dev:client
+        description: >
+          [Open Frontend](http://localhost:1234)
+        meta:
+          columns: 6

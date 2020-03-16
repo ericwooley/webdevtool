@@ -17,6 +17,8 @@
     "yarn": false
   },
   "scripts": {
+    "dev": "webdevtool start -f webdevtool.dev.yaml --port 4000",
+    "dev:stop": "webdevtool kill",
     "dev:server": "yarn ts-node-dev --respawn --transpileOnly  --watch src/server/,devtool.yaml src/server/server.ts server",
     "dev:server:no-restart": "yarn ts-node src/server/server.ts server",
     "dev:client": "yarn parcel src/client/index.html",
