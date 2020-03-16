@@ -39,10 +39,12 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
     "@types/styled-components": "^5.0.1",
-    "@types/websocket": "^1.0.0",
     "@types/xterm": "^3.0.0",
     "@types/yaml": "^1.2.0",
     "@types/yargs": "^15.0.4",
+    "@types/ws": "^7.2.2",
+    "axios": "^0.19.2",
+    "np": "^6.2.0",
     "parcel-bundler": "^1.12.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -57,13 +59,9 @@
     "xterm-addon-fit": "^0.3.0"
   },
   "dependencies": {
-    "@types/ws": "^7.2.2",
-    "axios": "^0.19.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "node-pty": "^0.9.0",
-    "np": "^6.2.0",
-    "websocket": "^1.0.31",
     "ws": "^7.2.3",
     "yaml": "^1.7.2",
     "yargs": "^15.1.0"

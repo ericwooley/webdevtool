@@ -1,4 +1,5 @@
-import { w3cwebsocket as W3CWebSocket } from 'websocket'
+// import { w3cwebsocket as W3CWebSocket } from 'websocket'
+import Websocket from 'ws'
 import { ISocketMessage } from '../interfaces'
 interface IListener {
   (message: ISocketMessage): any
@@ -13,7 +14,7 @@ interface ICloseListener {
   (): any
 }
 export default class Socket {
-  private client?: W3CWebSocket
+  private client?: WebSocket
   private connected: boolean = false
   private host: string
   private port: string
@@ -56,7 +57,7 @@ export default class Socket {
     if (this.preventConnection) return
     const wsServer = `ws://${this.host}:${this.port}/`
     console.log('connecting: ', wsServer)
-    this.client = new W3CWebSocket(wsServer, 'echo-protocol')
+    this.client = new WebSocket(wsServer, 'echo-protocol')
     this.client.onopen = () => {
       this.connected = true
       this.onOpenListeners.forEach(l => l())
