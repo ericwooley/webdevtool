@@ -46,6 +46,15 @@ const argsFromYarn = yargs
   .alias('h', 'help')
   .epilog('created by github.com/ericwooley')
   .command(
+    '$0',
+    'warn about commands',
+    () => {},
+    argv => {
+      console.log('no command given, see --help')
+      process.exit(1)
+    }
+  )
+  .command(
     'kill',
     'kill running daemon',
     () => {},
